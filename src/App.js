@@ -1,24 +1,30 @@
 import './App.css';
-import { useEffect, useState } from 'react';
-import { read } from './repositories/bill.repository.js';
+import { getBills }  from './services/bills.service';
+import React, { useEffect, useState } from "react";
 
 function App() {
   const [bills, setBills] = useState([]);
 
   useEffect(() => {
-      const result = read({ month: '06', year: '2022'}, x => { setBills(x); console.log(x); });
+    async function fetchBills () {
+      const result = await getBills({year: '2022', month: '07'});
+      console.log(result.data);
+      setBills(result.data);
+    }
+    fetchBills();
   }, []);
-
+  
   return (
     <div className="App">
-      <p>batata fritas</p>
-      <ul>
-        {bills.map(bill => (
-          <li key={1}>
-            <p>{{bill}}</p>
-          </li>
-        ))}
-      </ul>
+      <table>
+        <tbody>
+            {bills.map((bill) =>
+              <tr key={bill.id}>
+                <td>{bill.description}</td>
+              </tr>
+            )}
+        </tbody>
+      </table>
     </div>
   );
 }
