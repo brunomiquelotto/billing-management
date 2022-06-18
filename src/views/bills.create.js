@@ -53,7 +53,7 @@ function CreateBill() {
   }
 
   return (
-    <Box>
+    <Box sx={{padding: 1}}>
       <DefaultAppBar
         title={"Create Bill"}
         leftButtonBar={

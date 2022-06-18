@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from "react-router-dom";
+import { Box } from "@mui/system";
+import moment from "moment";
 
 // API
 import { getBills, deleteBill, payBill } from '../services/bills.service';
@@ -19,6 +21,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
+import Typography from '@mui/material/Typography';
+import { Stack } from "@mui/material";
 
 function Home() {
   const [bills, setBills] = useState({update: 0, data: []});
@@ -36,7 +40,7 @@ function Home() {
     /**
       @todo: Create an dialog with MUI components
     **/
-    if (window.confirm('Do you really want do delete bill?')) {
+    if (window.confirm('Do you really want to delete the bill?')) {
       try {
         await deleteBill(billID)
         let remainingBills = bills.data.filter((bill) => { return bill.id !== billID });
@@ -54,7 +58,7 @@ function Home() {
     /**
       @todo: Create an dialog with MUI components
     **/
-    if (window.confirm('Do you really want do pay bill?')) {
+    if (window.confirm('Do you really want do pay the bill?')) {
       try {
         let result = await payBill(billID).then()
         let index = bills.data.findIndex((bill) => bill.id === billID);
@@ -74,7 +78,7 @@ function Home() {
   }
 
   return (
-    <>
+    <Box sx={{padding: 1}}>
       <DefaultAppBar
         title={"Billing Management"}
         rightButtonBar={
@@ -84,47 +88,49 @@ function Home() {
             <AddIcon />
           </IconButton>
         } />
-      <Paper sx={{ width: '100%', display: 'block' }}>
+      <Paper sx={{ padding: 1}}>
         <TableContainer >
           <Table stickyHeader aria-label="sticky table" sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Group</TableCell>
-                <TableCell>Value</TableCell>
-                <TableCell>Payment Date</TableCell>
-                <TableCell sx={{ width: 20 }}/>
-                <TableCell sx={{ width: 20 }}/>
+                <TableCell><Typography style={{ fontWeight: 600 }}>ID</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 600 }}>Description</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 600 }}>Group</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 600 }}>Value</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 600 }}>Payment Date</Typography></TableCell>
+                <TableCell sx={{ width: 15 }}/>
               </TableRow>
             </TableHead>
             <TableBody>
               {bills.data.map((bill) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
                   <TableCell onClick={() => onSelectCell(bill)}> {bill.id} </TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}> {bill.description} </TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>{bill.group}</TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>$ {bill.value}</TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>{bill.paymentDate ? bill.paymentDate : "-"}</TableCell>
-                  <TableCell sx={{ width: 20 }}>
-                    {!bill.paymentDate && 
-                      <IconButton
-                          color="inherit"
-                          aria-label="open drawer"
-                          edge="end"
-                          onClick={() => { pay(bill.id) }}>
-                          <CheckIcon />
-                        </IconButton>
-                    }
+                  <TableCell onClick={() => onSelectCell(bill)}> {bill.description ? bill.description : "-"} </TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}>{bill.group ? bill.group : "-"}</TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}>{bill.value ? `$ ${bill.value}` : "-"}</TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}>
+                    {bill.paymentDate ? moment(bill.paymentDate).format('mm/DD/yyyy HH:mm:ss').toString() : "-"}
                   </TableCell>
-                  <TableCell sx={{ width: 20 }}>
-                    <IconButton
-                      color="inherit"
-                      aria-label="open drawer"
-                      edge="end"
-                      onClick={() => { removeBill(bill.id) }}>
-                      <DeleteIcon />
-                    </IconButton>
+                  <TableCell sx={{ width: 15 }}>
+                    <Stack spacing={2} direction="row" justifyContent="right">
+                      {!bill.paymentDate && 
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="end"
+                            onClick={() => { pay(bill.id) }}>
+                            <CheckIcon />
+                          </IconButton>
+                      }
+                      <IconButton
+                        sx={{marginRight:.1}}
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="end"
+                        onClick={() => { removeBill(bill.id) }}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Stack>
                   </TableCell>
                 </TableRow>
               ))}
@@ -132,7 +138,7 @@ function Home() {
           </Table>
         </TableContainer>
       </Paper>
-    </>
+    </Box>
   )
 }
 

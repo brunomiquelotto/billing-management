@@ -7,7 +7,7 @@ function DefaultAppBar({title, leftButtonBar, rightButtonBar}) {
         <div>
           <MuiAppBar position="fixed">
           <Toolbar>
-            <div sx={{marginLeft:0}}>
+            <div>
             {leftButtonBar}
             </div>
             <Typography variant="h6" noWrap sx={{ flexGrow: 1, marginLeft: 2}} component="div">
