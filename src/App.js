@@ -1,5 +1,5 @@
 import './App.css';
-import { getBills } from './services/bills.service';
+import { getBills, deleteBill } from './services/bills.service';
 import React, { useEffect, useState } from "react";
 
 // Bar
@@ -16,6 +16,8 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function App() {
   const [bills, setBills] = useState([]);
@@ -29,10 +31,34 @@ function App() {
     fetchBills();
   }, []);
 
-  function navigateToAddBill() {
-    console.log("TODO: Create a Navigation for an Add Bill Screen")
+  async function removeBill(billID) {
+    /**
+      @todo: Create an dialog with MUI components
+    **/
+    if(window.confirm('Do you really want do delete bill?')) {
+      try {
+        await deleteBill(billID)
+        let remainingBills = bills.filter((bill) => {return bill.id !== billID});   
+        setBills(remainingBills)
+      } catch (err) {
+        /**
+          @todo: Create an alert message
+        **/
+        window.alert(err.response.status)
+      }
+    }
   }
 
+  function navigateToAddBill() {
+    /**
+      @todo: Create a Navigation for an Add Bill Screen
+    **/
+    console.log("TODO: Create a Navigation for an Add Bill Screen")
+  }
+  
+  function onSelectCell(billID) {
+    console.log(billID);
+  }
   return (
     <>
       <MuiAppBar position="fixed">
@@ -49,31 +75,33 @@ function App() {
           </IconButton>
         </Toolbar>
       </MuiAppBar>
-      <TableContainer >
-        <Table sx={{ minWidth: 650, marginTop: 10 }} aria-label="caption table">
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Group</TableCell>
-              <TableCell>Value</TableCell>
-              <TableCell>Bill Fixed</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {bills.map((bill) => (
-              <TableRow key={bill.id}>
-                <TableCell> {bill.id} </TableCell>
-                <TableCell> {bill.description} </TableCell>
-                <TableCell>{bill.group}</TableCell>
-                <TableCell>R$ {bill.value}</TableCell>
-                <TableCell>´${bill.isFixed ? "True icone" : "False icone"}´</TableCell>
+      <Paper sx={{ width: '100%', marginTop: 10 }}>
+        <TableContainer >
+          <Table stickyHeader aria-label="sticky table" sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Group</TableCell>
+                <TableCell>Value</TableCell>
+                <TableCell sx={{ width: 50 }}></TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      </>
+            </TableHead>
+            <TableBody>
+              {bills.map((bill) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
+                  <TableCell onClick={() => onSelectCell(bill.id)}> {bill.id} </TableCell>
+                  <TableCell onClick={() => onSelectCell(bill.id)}> {bill.description} </TableCell>
+                  <TableCell onClick={() => onSelectCell(bill.id)}>{bill.group}</TableCell>
+                  <TableCell onClick={() => onSelectCell(bill.id)}>R$ {bill.value}</TableCell>
+                  <TableCell sx={{ width: 50 }}><DeleteIcon onClick={() => {removeBill(bill.id)}}></DeleteIcon></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </>
   )
 }
 
