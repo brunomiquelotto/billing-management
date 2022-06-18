@@ -1,4 +1,3 @@
-import './App.css';
 import { getBills, deleteBill } from './services/bills.service';
 import React, { useEffect, useState } from "react";
 
@@ -51,9 +50,9 @@ function App() {
 
   function navigateToAddBill() {
     /**
-      @todo: Create a Navigation for an Add Bill Screen
+      @todo: Create a Navigation for Add Bill Screen
     **/
-    console.log("TODO: Create a Navigation for an Add Bill Screen")
+    console.log("TODO: Create a Navigation for Add Bill Screen")
   }
   
   function onSelectCell(billID) {
