@@ -94,7 +94,15 @@ function App() {
                   <TableCell onClick={() => onSelectCell(bill.id)}> {bill.description} </TableCell>
                   <TableCell onClick={() => onSelectCell(bill.id)}>{bill.group}</TableCell>
                   <TableCell onClick={() => onSelectCell(bill.id)}>R$ {bill.value}</TableCell>
-                  <TableCell sx={{ width: 50 }}><DeleteIcon onClick={() => {removeBill(bill.id)}}></DeleteIcon></TableCell>
+                  <TableCell sx={{ width: 50 }}>
+                    <IconButton
+                      color="inherit"
+                      aria-label="open drawer"
+                      edge="end"
+                      onClick={() => { removeBill(bill.id) }}>
+                      <DeleteIcon ></DeleteIcon>
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
