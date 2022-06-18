@@ -8,12 +8,11 @@ const getBillsByDate = async ({ year, month }) => {
   return await API.get(`bills/${year}/${month}`);
 }
 
-const addBill = async (bill) => {
+const addOrUpdateBill = async (bill) => {
+  if(bill.id) {
+    return await API.put(`bills/${bill.id}`, bill);
+  }
   return await API.post(`bills`, bill);
-}
-
-const updateBill = async (bill) => {
-  return await API.put(`bills/${bill.id}`, bill);
 }
 
 const deleteBill = async (billID) => {
@@ -28,4 +27,4 @@ const payBill = async (billID) => {
   return await API.post(`bills/${billID}/pay`);
 }
 
-export { getBills, getBillsByDate, addBill, updateBill, deleteBill, copyBillFromLastMonth, payBill }
+export { getBills, getBillsByDate, addOrUpdateBill, deleteBill, copyBillFromLastMonth, payBill }

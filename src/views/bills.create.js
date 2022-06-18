@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { addBill } from "../services/bills.service";
+import { useNavigate, useLocation  } from "react-router-dom";
+import { addOrUpdateBill } from "../services/bills.service";
 
 // Bar
 import IconButton from '@mui/material/IconButton';
@@ -8,22 +8,25 @@ import DefaultAppBar from '../components/default.header';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // Form
-import React, { useState } from "react";
+import React, { useState  } from "react";
 import { Box, Checkbox, InputAdornment, Paper, Stack, TextField } from "@mui/material";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import moment from "moment";
 
 function CreateBill() {
   const navigate = useNavigate()
+  const location = useLocation();
+  let bill = location.state
 
-  const [description, setDescription] = useState("");
-  const [value, setValue] = useState(0);
-  const [group, setGroup] = useState("");
-  const [obs, setObs] = useState("");
-  const [dueDate, setDueDate] = React.useState(Date());
-  const [isFixed, setFixed] = React.useState(false);
+  const [description, setDescription] = useState(bill && bill.description);
+  const [value, setValue] = useState(bill && bill.value);
+  const [group, setGroup] = useState(bill && bill.group);
+  const [obs, setObs] = useState(bill && bill.obs);
+  const [dueDate, setDueDate] = React.useState(bill && bill.dueDate);
+  const [isFixed, setFixed] = React.useState(bill && bill.isFixed);
 
   const onDescriptionChanged = (event) => { setDescription(event.target.value)}
   const onValueChanged = (event) => { setValue(event.target.value)}
@@ -33,7 +36,8 @@ function CreateBill() {
   const onIsFixedChanged = (event) => { setFixed(event.target.checked)}
   
   async function saveBill() {
-    const bill = {
+    const newBill = {
+      id: bill && bill.id,
       description: description,
       group: group,
       value: value,
@@ -41,7 +45,8 @@ function CreateBill() {
       isFixed: isFixed,
       obs: obs
     }
-    await addBill(bill).then((response) => {
+
+    await addOrUpdateBill(newBill).then((response) => {
       console.log(response.data)
       navigate('/', { replace: true })
     }).catch((error) => {
@@ -63,14 +68,14 @@ function CreateBill() {
         rightButtonBar={
           <IconButton
             color="inherit"
-            onClick={saveBill}>
+            onClick={() => {saveBill()}}>
             <SaveAsIcon />
           </IconButton>} 
       />
       <Paper sx={{padding: 1}}>
       <Stack spacing={1} direction="column" justifyContent="center">
-        <TextField label="Description" variant="outlined" onChange={onDescriptionChanged} />
-        <TextField label="Value" variant="outlined" onChange={onValueChanged} type="number" 
+        <TextField label="Description" variant="outlined" defaultValue={description} onChange={onDescriptionChanged} />
+        <TextField label="Value" variant="outlined" defaultValue={value} onChange={onValueChanged} type="number" 
           InputProps={{
              min: 0,
              startAdornment: <InputAdornment position="start">$</InputAdornment>
@@ -80,17 +85,18 @@ function CreateBill() {
               event.preventDefault();
             }
           }}/>
-        <TextField label="Group" variant="outlined" onChange={onGroupChanged} />
+        <TextField label="Group" variant="outlined" defaultValue={group} onChange={onGroupChanged} />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DateTimePicker
             label="Due Date"
-            value={dueDate}
+            defaultValue={dueDate}
+            {...dueDate ? {value: dueDate} : null }
             onChange={onDueDateChanged}
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
-        <TextField label="Obs" variant="outlined" onChange={onObsChanged} />
-        <FormControlLabel control={<Checkbox />} onChange={onIsFixedChanged} label="Is Fixed" />
+        <TextField label="Obs" variant="outlined" defaultValue={obs} onChange={onObsChanged} />
+        <FormControlLabel control={isFixed ? <Checkbox defaultChecked /> : <Checkbox />} onChange={onIsFixedChanged} label="Is Fixed" />
       </Stack>
       </Paper>
     </Box>

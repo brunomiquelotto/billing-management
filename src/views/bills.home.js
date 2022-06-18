@@ -49,8 +49,8 @@ function Home() {
     }
   }
 
-  function onSelectCell(billID) {
-    console.log(billID);
+  function onSelectCell(bill) {
+    navigate('/Create',{state: bill})
   }
 
   return (
@@ -79,10 +79,10 @@ function Home() {
             <TableBody>
               {bills.map((bill) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
-                  <TableCell onClick={() => onSelectCell(bill.id)}> {bill.id} </TableCell>
-                  <TableCell onClick={() => onSelectCell(bill.id)}> {bill.description} </TableCell>
-                  <TableCell onClick={() => onSelectCell(bill.id)}>{bill.group}</TableCell>
-                  <TableCell onClick={() => onSelectCell(bill.id)}>R$ {bill.value}</TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}> {bill.id} </TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}> {bill.description} </TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}>{bill.group}</TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}>$ {bill.value}</TableCell>
                   <TableCell sx={{ width: 50 }}>
                     <IconButton
                       color="inherit"
