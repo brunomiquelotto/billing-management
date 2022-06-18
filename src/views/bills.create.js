@@ -14,7 +14,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import moment from "moment";
 
 function CreateBill() {
   const navigate = useNavigate()
@@ -47,7 +46,6 @@ function CreateBill() {
     }
 
     await addOrUpdateBill(newBill).then((response) => {
-      console.log(response.data)
       navigate('/', { replace: true })
     }).catch((error) => {
       window.alert(error.status)

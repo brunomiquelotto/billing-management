@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import { useNavigate } from "react-router-dom";
 
 // API
-import { getBills, deleteBill } from '../services/bills.service';
+import { getBills, deleteBill, payBill } from '../services/bills.service';
 
 // Bar
 import DefaultAppBar from '../components/default.header';
@@ -18,15 +18,16 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
 
 function Home() {
-  const [bills, setBills] = useState([]);
+  const [bills, setBills] = useState({update: 0, data: []});
   const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchBills() {
       const result = await getBills();
-      setBills(result.data);
+      setBills({update: bills.update += 1, data: result.data});
     }
     fetchBills();
   }, []);
@@ -38,13 +39,32 @@ function Home() {
     if (window.confirm('Do you really want do delete bill?')) {
       try {
         await deleteBill(billID)
-        let remainingBills = bills.filter((bill) => { return bill.id !== billID });
-        setBills(remainingBills)
-      } catch (err) {
+        let remainingBills = bills.data.filter((bill) => { return bill.id !== billID });
+        setBills({update: bills.update += 1, data: remainingBills});
+      } catch (error) {
         /**
           @todo: Create an alert message
         **/
-        window.alert(err.response.status)
+        window.alert(error.response.status)
+      }
+    }
+  }
+
+  async function pay(billID) {
+    /**
+      @todo: Create an dialog with MUI components
+    **/
+    if (window.confirm('Do you really want do pay bill?')) {
+      try {
+        let result = await payBill(billID).then()
+        let index = bills.data.findIndex((bill) => bill.id === billID);
+        bills.data[index] = result.data
+        setBills({update: bills.update += 1, data: bills.data});
+      } catch (error) {
+        /**
+          @todo: Create an alert message
+        **/
+        window.alert(error.response.status)
       }
     }
   }
@@ -73,17 +93,31 @@ function Home() {
                 <TableCell>Description</TableCell>
                 <TableCell>Group</TableCell>
                 <TableCell>Value</TableCell>
-                <TableCell sx={{ width: 50 }} />
+                <TableCell>Payment Date</TableCell>
+                <TableCell sx={{ width: 20 }}/>
+                <TableCell sx={{ width: 20 }}/>
               </TableRow>
             </TableHead>
             <TableBody>
-              {bills.map((bill) => (
+              {bills.data.map((bill) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
                   <TableCell onClick={() => onSelectCell(bill)}> {bill.id} </TableCell>
                   <TableCell onClick={() => onSelectCell(bill)}> {bill.description} </TableCell>
                   <TableCell onClick={() => onSelectCell(bill)}>{bill.group}</TableCell>
                   <TableCell onClick={() => onSelectCell(bill)}>$ {bill.value}</TableCell>
-                  <TableCell sx={{ width: 50 }}>
+                  <TableCell onClick={() => onSelectCell(bill)}>{bill.paymentDate ? bill.paymentDate : "-"}</TableCell>
+                  <TableCell sx={{ width: 20 }}>
+                    {!bill.paymentDate && 
+                      <IconButton
+                          color="inherit"
+                          aria-label="open drawer"
+                          edge="end"
+                          onClick={() => { pay(bill.id) }}>
+                          <CheckIcon />
+                        </IconButton>
+                    }
+                  </TableCell>
+                  <TableCell sx={{ width: 20 }}>
                     <IconButton
                       color="inherit"
                       aria-label="open drawer"
