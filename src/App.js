@@ -1,11 +1,9 @@
 import { getBills, deleteBill } from './services/bills.service';
 import React, { useEffect, useState } from "react";
+import DefaultAppBar from './components/default.header';
+import IconButton from '@mui/material/IconButton';
 
 // Bar
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 
 // Table
@@ -24,7 +22,6 @@ function App() {
   useEffect(() => {
     async function fetchBills() {
       const result = await getBills();
-      console.log(result.data);
       setBills(result.data);
     }
     fetchBills();
@@ -58,22 +55,20 @@ function App() {
   function onSelectCell(billID) {
     console.log(billID);
   }
+
   return (
     <>
-      <MuiAppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-            Billing Management
-          </Typography>
+      <DefaultAppBar 
+        title={"Billing Management"}
+        rightButtonBar={
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="end"
             onClick={navigateToAddBill}>
             <AddIcon />
-          </IconButton>
-        </Toolbar>
-      </MuiAppBar>
+          </IconButton>}>
+        </DefaultAppBar>
       <Paper sx={{ width: '100%', marginTop: 10 }}>
         <TableContainer >
           <Table stickyHeader aria-label="sticky table" sx={{ minWidth: 650 }}>
