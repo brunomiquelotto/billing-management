@@ -1,97 +1,80 @@
 import './App.css';
-import { getBills, addBill, updateBill, deleteBill, copyBillFromLastMonth, payBill }  from './services/bills.service';
+import { getBills } from './services/bills.service';
 import React, { useEffect, useState } from "react";
+
+// Bar
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import AddIcon from '@mui/icons-material/Add';
+
+// Table
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
 function App() {
   const [bills, setBills] = useState([]);
 
   useEffect(() => {
-    async function fetchBills () {
+    async function fetchBills() {
       const result = await getBills();
       console.log(result.data);
       setBills(result.data);
     }
     fetchBills();
   }, []);
-  
-  async function newBill() {
-    const bill = {
-      description: 'descriçao teste',
-      group: 'grupo 2',
-      value: 10,
-      paymentDate: null,
-      dueDate: '2022-05-05',
-      isFixed: true,
-      obs: null
-    }
-    const result = await addBill(bill)
-    console.log(result);
+
+  function navigateToAddBill() {
+    console.log("TODO: Create a Navigation for an Add Bill Screen")
   }
-  
-  async function updateFirstBill() {
-    const billToUpdate = {
-      id: 1,
-      description: `descriçao atualizada ${Date()}`,
-      group: 'grupo 2',
-      value: 10,
-      paymentDate: null,
-      dueDate: '2022-05-05',
-      isFixed: true,
-      obs: null
-    }
-    const result = await updateBill(billToUpdate)
-    console.log(result);
-  }
-
-  async function removeBill() {
-    const billID = bills[0].id
-    if (billID != undefined) {
-      const result = await deleteBill(billID)
-      console.log(result);
-    }
-  } 
-
-  async function copyBill() {
-    const result = await copyBillFromLastMonth()
-    console.log(result);
-  } 
-
-  async function payFirstBill() {
-    const billID = bills[0].id
-    if (billID != undefined) {
-      const result = await payBill(billID)
-      console.log(result);
-    }
-  } 
 
   return (
-    <div className="App">
-      <table>
-        <tbody>
-            {bills.map((bill) =>
-              <tr key={bill.id}>
-                <td>Desc: {bill.description} Payment: {bill.paymentDate}</td>
-              </tr>
-            )}
-        </tbody>
-      </table>
-      <button onClick={newBill}>
-        New Bill
-      </button>
-      <button onClick={removeBill}>
-        Delete First Bill
-      </button>
-      <button onClick={updateFirstBill}>
-        Update First Bill
-      </button>
-      <button onClick={copyBill}>
-        Copy Bill From Last Month
-      </button>
-      <button onClick={payFirstBill}>
-        Pay Last Bill
-      </button>
-    </div>
-  );
+    <>
+      <MuiAppBar position="fixed">
+        <Toolbar>
+          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
+            Billing Management
+          </Typography>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="end"
+            onClick={navigateToAddBill}>
+            <AddIcon />
+          </IconButton>
+        </Toolbar>
+      </MuiAppBar>
+      <TableContainer >
+        <Table sx={{ minWidth: 650, marginTop: 10 }} aria-label="caption table">
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Group</TableCell>
+              <TableCell>Value</TableCell>
+              <TableCell>Bill Fixed</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {bills.map((bill) => (
+              <TableRow key={bill.id}>
+                <TableCell> {bill.id} </TableCell>
+                <TableCell> {bill.description} </TableCell>
+                <TableCell>{bill.group}</TableCell>
+                <TableCell>R$ {bill.value}</TableCell>
+                <TableCell>´${bill.isFixed ? "True icone" : "False icone"}´</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      </>
+  )
 }
 
 export default App;
