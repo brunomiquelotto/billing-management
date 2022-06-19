@@ -60,14 +60,14 @@ function CreateBill() {
         leftButtonBar={
           <IconButton
             color="inherit"
-            onClick={() => { navigate('/', { replace: true }) }}>
+            onClick={ () => navigate('/', { replace: true }) }>
             <ArrowBackIcon />
           </IconButton>
         }
         rightButtonBar={
           <IconButton
             color="inherit"
-            onClick={() => {saveBill()}}>
+            onClick={ () => saveBill() }>
             <SaveAsIcon />
           </IconButton>} 
       />

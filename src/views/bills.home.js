@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
 // API
-import { getBills, deleteBill, payBill } from '../services/bills.service';
+import { getBills, deleteBill, payBill, copyBillFromLastMonth } from '../services/bills.service';
 
 // Bar
 import DefaultAppBar from '../components/default.header';
 import AddIcon from '@mui/icons-material/Add';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 // Table
 import Table from '@mui/material/Table';
@@ -36,7 +37,7 @@ function Home() {
 
   async function removeBill(billID) {
     /**
-      @todo: Create an dialog with MUI components
+      @todo: Create a dialog with MUI components
     **/
     if (window.confirm('Do you really want to delete the bill?')) {
       try {
@@ -54,7 +55,7 @@ function Home() {
 
   async function pay(billID) {
     /**
-      @todo: Create an dialog with MUI components
+      @todo: Create a dialog with MUI components
     **/
     if (window.confirm('Do you really want do pay the bill?')) {
       try {
@@ -62,6 +63,22 @@ function Home() {
         let index = bills.data.findIndex((bill) => bill.id === billID);
         bills.data[index] = result.data
         setBills({update: bills.update += 1, data: bills.data});
+      } catch (error) {
+        /**
+          @todo: Create an alert message
+        **/
+        window.alert(error.response.status)
+      }
+    }
+  }
+
+  async function copy() {
+    /**
+      @todo: Create a dialog with MUI components
+    **/
+    if (window.confirm('Do you really want do copy the bills from last month?')) {
+      try {
+        await copyBillFromLastMonth();
       } catch (error) {
         /**
           @todo: Create an alert message
@@ -80,11 +97,18 @@ function Home() {
       <DefaultAppBar
         title={"Billing Management"}
         rightButtonBar={
-          <IconButton
-            color="inherit"
-            onClick={() => { navigate('/Create') }}>
-            <AddIcon />
-          </IconButton>
+          <>
+            <IconButton
+              color="inherit"
+              onClick={ () => copy() }>
+              <FileCopyIcon />
+            </IconButton>
+            <IconButton
+              color="inherit"
+              onClick={ () => navigate('/Create') }>
+              <AddIcon />
+            </IconButton>
+          </>
         } />
       <Paper elevation={1}>
         <TableContainer>
@@ -102,11 +126,11 @@ function Home() {
             <TableBody>
               {bills.data.map((bill) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
-                  <TableCell onClick={() => onSelectCell(bill)}> {bill.id} </TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}> {bill.description ? bill.description : "-"} </TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>{bill.group ? bill.group : "-"}</TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>{bill.value ? `$ ${bill.value}` : "-"}</TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>
+                  <TableCell onClick={ () => onSelectCell(bill) }> {bill.id} </TableCell>
+                  <TableCell onClick={ () => onSelectCell(bill) }> {bill.description ? bill.description : "-"} </TableCell>
+                  <TableCell onClick={ () => onSelectCell(bill) }>{bill.group ? bill.group : "-"}</TableCell>
+                  <TableCell onClick={ () => onSelectCell(bill) }>{bill.value ? `$ ${bill.value}` : "-"}</TableCell>
+                  <TableCell onClick={ () => onSelectCell(bill) }>
                     {bill.paymentDate ? moment(bill.paymentDate).format('mm/DD/yyyy HH:mm:ss').toString() : "-"}
                   </TableCell>
                   <TableCell width={15}>
@@ -116,7 +140,7 @@ function Home() {
                             color="success"
                             aria-label="open drawer"
                             edge="end"
-                            onClick={() => { pay(bill.id) }}>
+                            onClick={ () => { pay(bill.id) }}>
                             <CheckIcon />
                           </IconButton>
                       }
@@ -125,7 +149,7 @@ function Home() {
                         color="secondary"
                         aria-label="open drawer"
                         edge="end"
-                        onClick={() => { removeBill(bill.id) }}>
+                        onClick={ () => { removeBill(bill.id) }}>
                         <DeleteIcon color="white" />
                       </IconButton>
                     </Stack>
