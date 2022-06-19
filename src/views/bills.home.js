@@ -34,7 +34,7 @@ function Home() {
       setBills({update: bills.update += 1, data: result.data});
     }
     fetchBills();
-  }, []);
+  }, [bills]);
 
   async function removeBill(billID) {
     /**
@@ -76,9 +76,11 @@ function Home() {
   function onSelectCell(bill) {
     navigate('/Create',{state: bill})
   }
-
+  /**
+    @todo: Create theme file or style section to style components
+  **/
   return (
-    <Box sx={{padding: 1}}>
+    <Box padding={1} sx={{ bgColor: "#f1f1f1" }}>
       <DefaultAppBar
         title={"Billing Management"}
         rightButtonBar={
@@ -88,34 +90,34 @@ function Home() {
             <AddIcon />
           </IconButton>
         } />
-      <Paper sx={{ padding: 1}}>
-        <TableContainer >
+      <Paper>
+        <TableContainer>
           <Table stickyHeader aria-label="sticky table" sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
-                <TableCell><Typography style={{ fontWeight: 600 }}>ID</Typography></TableCell>
-                <TableCell><Typography style={{ fontWeight: 600 }}>Description</Typography></TableCell>
-                <TableCell><Typography style={{ fontWeight: 600 }}>Group</Typography></TableCell>
-                <TableCell><Typography style={{ fontWeight: 600 }}>Value</Typography></TableCell>
-                <TableCell><Typography style={{ fontWeight: 600 }}>Payment Date</Typography></TableCell>
-                <TableCell sx={{ width: 15 }}/>
+                <TableCell><Typography style={{ fontWeight: 600, color:'#073857'}}>ID</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 600, color:'#073857' }}>Description</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 600, color:'#073857' }}>Group</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 600, color:'#073857' }}>Value</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 600, color:'#073857' }}>Payment Date</Typography></TableCell>
+                <TableCell width={15}/>
               </TableRow>
             </TableHead>
             <TableBody>
               {bills.data.map((bill) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
-                  <TableCell onClick={() => onSelectCell(bill)}> {bill.id} </TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}> {bill.description ? bill.description : "-"} </TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>{bill.group ? bill.group : "-"}</TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>{bill.value ? `$ ${bill.value}` : "-"}</TableCell>
-                  <TableCell onClick={() => onSelectCell(bill)}>
+                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}> {bill.id} </TableCell>
+                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}> {bill.description ? bill.description : "-"} </TableCell>
+                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}>{bill.group ? bill.group : "-"}</TableCell>
+                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}>{bill.value ? `$ ${bill.value}` : "-"}</TableCell>
+                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}>
                     {bill.paymentDate ? moment(bill.paymentDate).format('mm/DD/yyyy HH:mm:ss').toString() : "-"}
                   </TableCell>
-                  <TableCell sx={{ width: 15 }}>
+                  <TableCell width={15}>
                     <Stack spacing={2} direction="row" justifyContent="right">
                       {!bill.paymentDate && 
-                        <IconButton
-                            color="inherit"
+                        <IconButton                            
+                            color="success"
                             aria-label="open drawer"
                             edge="end"
                             onClick={() => { pay(bill.id) }}>
@@ -123,12 +125,12 @@ function Home() {
                           </IconButton>
                       }
                       <IconButton
-                        sx={{marginRight:.1}}
-                        color="inherit"
+                        sx={{marginRight:.1,  color: "#db2424"}}
+                        color="secondary"
                         aria-label="open drawer"
                         edge="end"
                         onClick={() => { removeBill(bill.id) }}>
-                        <DeleteIcon />
+                        <DeleteIcon color="white" />
                       </IconButton>
                     </Stack>
                   </TableCell>

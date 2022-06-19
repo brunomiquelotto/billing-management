@@ -51,9 +51,11 @@ function CreateBill() {
       window.alert(error.status)
     })
   }
-
+  /**
+    @todo: Create theme file or style section to style components
+  **/
   return (
-    <Box sx={{padding: 1}}>
+    <Box padding={1}>
       <DefaultAppBar
         title={"Create Bill"}
         leftButtonBar={
@@ -72,8 +74,8 @@ function CreateBill() {
       />
       <Paper sx={{padding: 1}}>
       <Stack spacing={1} direction="column" justifyContent="center">
-        <TextField label="Description" variant="outlined" defaultValue={description} onChange={onDescriptionChanged} />
-        <TextField label="Value" variant="outlined" defaultValue={value} onChange={onValueChanged} type="number" 
+        <TextField inputProps={{ style: { color: "#073857" }}} label="Description" variant="outlined" defaultValue={description} onChange={onDescriptionChanged} />
+        <TextField inputProps={{ style: { color: "#073857" }}} label="Value" variant="outlined" defaultValue={value} onChange={onValueChanged} type="number" 
           InputProps={{
              min: 0,
              startAdornment: <InputAdornment position="start">$</InputAdornment>
@@ -83,18 +85,28 @@ function CreateBill() {
               event.preventDefault();
             }
           }}/>
-        <TextField label="Group" variant="outlined" defaultValue={group} onChange={onGroupChanged} />
+        <TextField inputProps={{ style: { color: "#073857" }}} label="Group" variant="outlined" defaultValue={group} onChange={onGroupChanged} />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DateTimePicker
             label="Due Date"
             defaultValue={dueDate}
             {...dueDate ? {value: dueDate} : null }
             onChange={onDueDateChanged}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params) => (
+              <TextField
+                  {...params}
+                  sx={{
+                    svg: { color: '#073857' },
+                    input: { color: '#073857' },
+                  }}
+               />
+           )}
           />
         </LocalizationProvider>
-        <TextField label="Obs" variant="outlined" defaultValue={obs} onChange={onObsChanged} />
-        <FormControlLabel control={isFixed ? <Checkbox defaultChecked /> : <Checkbox />} onChange={onIsFixedChanged} label="Is Fixed" />
+        <Stack spacing={1} direction="row">
+          <TextField inputProps={{ style: { color: "#073857" }}} label="Obs" variant="outlined" defaultValue={obs} onChange={onObsChanged} sx={{ flex:8 }} />
+          <FormControlLabel inputProps={{ style: { color: "#073857" }}} control={isFixed ? <Checkbox defaultChecked /> : <Checkbox />} onChange={onIsFixedChanged} label="Is Fixed"  sx={{ flex:2 }} />
+        </Stack>
       </Stack>
       </Paper>
     </Box>

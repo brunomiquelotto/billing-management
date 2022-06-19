@@ -12,6 +12,7 @@ function createWindow() {
       nodeIntegration: true,
     },
     autoHideMenuBar: true,
+    backgroundColor: "#f1f1f1"
   });
 
   // and load the index.html of the app.

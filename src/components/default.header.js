@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 function DefaultAppBar({title, leftButtonBar, rightButtonBar}) {
     return (
         <div>
-          <MuiAppBar position="fixed">
+          <MuiAppBar sx={{ bgcolor: "#1c4e80", color: "white" }} position="fixed">
           <Toolbar>
             <div>
             {leftButtonBar}
