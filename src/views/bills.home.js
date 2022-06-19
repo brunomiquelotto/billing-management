@@ -131,7 +131,7 @@ function Home() {
                   <TableCell onClick={ () => onSelectCell(bill) }>{bill.group ? bill.group : "-"}</TableCell>
                   <TableCell onClick={ () => onSelectCell(bill) }>{bill.value ? `$ ${bill.value}` : "-"}</TableCell>
                   <TableCell onClick={ () => onSelectCell(bill) }>
-                    {bill.paymentDate ? moment(bill.paymentDate).format('mm/DD/yyyy HH:mm:ss').toString() : "-"}
+                    {bill.paymentDate ? moment(bill.paymentDate).format('MM/DD/YY HH:mm').toString() : "-"}
                   </TableCell>
                   <TableCell width={15}>
                     <Stack spacing={2} direction="row" justifyContent="right">
