@@ -53,6 +53,7 @@ function CreateBill() {
   }
   /**
     @todo: Create theme file or style section to style components
+          - Remove InputProps warning
   **/
   return (
     <Box padding={1}>
