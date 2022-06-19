@@ -24,13 +24,13 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Box, Stack } from "@mui/material";
 
 function Home() {
-  const [bills, setBills] = useState({update: 0, data: []});
+  const [bills, setBills] = useState([]);
   const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchBills() {
       const result = await getBills();
-      setBills({update: bills.update += 1, data: result.data});
+      setBills(result.data);
     }
     fetchBills();
   }, [bills]);
@@ -42,8 +42,8 @@ function Home() {
     if (window.confirm('Do you really want to delete the bill?')) {
       try {
         await deleteBill(billID)
-        let remainingBills = bills.data.filter((bill) => { return bill.id !== billID });
-        setBills({update: bills.update += 1, data: remainingBills});
+        let remainingBills = bills.filter((bill) => { return bill.id !== billID });
+        setBills(remainingBills);
       } catch (error) {
         /**
           @todo: Create an alert message
@@ -60,9 +60,9 @@ function Home() {
     if (window.confirm('Do you really want do pay the bill?')) {
       try {
         let result = await payBill(billID).then()
-        let index = bills.data.findIndex((bill) => bill.id === billID);
-        bills.data[index] = result.data
-        setBills({update: bills.update += 1, data: bills.data});
+        let index = bills.findIndex((bill) => bill.id === billID);
+        bills[index] = result.data
+        setBills(bills);
       } catch (error) {
         /**
           @todo: Create an alert message
@@ -124,7 +124,7 @@ function Home() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bills.data.map((bill) => (
+              {bills.map((bill) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
                   <TableCell onClick={ () => onSelectCell(bill) }> {bill.id} </TableCell>
                   <TableCell onClick={ () => onSelectCell(bill) }> {bill.description ? bill.description : "-"} </TableCell>
