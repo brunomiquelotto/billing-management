@@ -25,7 +25,7 @@ function CreateBill() {
   const [value, setValue] = useState(bill && bill.value);
   const [group, setGroup] = useState(bill && bill.group);
   const [obs, setObs] = useState(bill && bill.obs);
-  const [dueDate, setDueDate] = React.useState(bill && bill.dueDate);
+  const [dueDate, setDueDate] = React.useState(bill ? bill.dueDate : Date());
   const [isFixed, setFixed] = React.useState(bill && bill.isFixed);
 
   const onDescriptionChanged = (event) => { setDescription(event.target.value)}
@@ -46,7 +46,7 @@ function CreateBill() {
       obs: obs
     }
 
-    await addOrUpdateBill(newBill).then((response) => {
+    await addOrUpdateBill(newBill).then(() => {
       navigate('/', { replace: true })
     }).catch((error) => {
       window.alert(error.status)
