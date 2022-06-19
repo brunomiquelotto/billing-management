@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from "react-router-dom";
-import { Box } from "@mui/system";
 import moment from "moment";
 
 // API
@@ -21,8 +20,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
-import Typography from '@mui/material/Typography';
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 
 function Home() {
   const [bills, setBills] = useState({update: 0, data: []});
@@ -76,11 +74,9 @@ function Home() {
   function onSelectCell(bill) {
     navigate('/Create',{state: bill})
   }
-  /**
-    @todo: Create theme file or style section to style components
-  **/
+
   return (
-    <Box padding={1} sx={{ bgColor: "#f1f1f1" }}>
+    <Box padding={1}>
       <DefaultAppBar
         title={"Billing Management"}
         rightButtonBar={
@@ -90,27 +86,27 @@ function Home() {
             <AddIcon />
           </IconButton>
         } />
-      <Paper>
+      <Paper elevation={1}>
         <TableContainer>
           <Table stickyHeader aria-label="sticky table" sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
-                <TableCell><Typography style={{ fontWeight: 600, color:'#073857'}}>ID</Typography></TableCell>
-                <TableCell><Typography style={{ fontWeight: 600, color:'#073857' }}>Description</Typography></TableCell>
-                <TableCell><Typography style={{ fontWeight: 600, color:'#073857' }}>Group</Typography></TableCell>
-                <TableCell><Typography style={{ fontWeight: 600, color:'#073857' }}>Value</Typography></TableCell>
-                <TableCell><Typography style={{ fontWeight: 600, color:'#073857' }}>Payment Date</Typography></TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Group</TableCell>
+                <TableCell>Value</TableCell>
+                <TableCell>Payment Date</TableCell>
                 <TableCell width={15}/>
               </TableRow>
             </TableHead>
             <TableBody>
               {bills.data.map((bill) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
-                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}> {bill.id} </TableCell>
-                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}> {bill.description ? bill.description : "-"} </TableCell>
-                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}>{bill.group ? bill.group : "-"}</TableCell>
-                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}>{bill.value ? `$ ${bill.value}` : "-"}</TableCell>
-                  <TableCell sx={{ color: "#073857"}} onClick={() => onSelectCell(bill)}>
+                  <TableCell onClick={() => onSelectCell(bill)}> {bill.id} </TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}> {bill.description ? bill.description : "-"} </TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}>{bill.group ? bill.group : "-"}</TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}>{bill.value ? `$ ${bill.value}` : "-"}</TableCell>
+                  <TableCell onClick={() => onSelectCell(bill)}>
                     {bill.paymentDate ? moment(bill.paymentDate).format('mm/DD/yyyy HH:mm:ss').toString() : "-"}
                   </TableCell>
                   <TableCell width={15}>

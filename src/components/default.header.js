@@ -5,12 +5,12 @@ import Typography from '@mui/material/Typography';
 function DefaultAppBar({title, leftButtonBar, rightButtonBar}) {
     return (
         <div>
-          <MuiAppBar sx={{ bgcolor: "#1c4e80", color: "white" }} position="fixed">
+          <MuiAppBar>
           <Toolbar>
             <div>
             {leftButtonBar}
             </div>
-            <Typography variant="h6" noWrap sx={{ flexGrow: 1, marginLeft: 2}} component="div">
+            <Typography variant="h5" noWrap  component="div">
               {title}
             </Typography>
             {rightButtonBar}

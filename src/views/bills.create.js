@@ -9,11 +9,12 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // Form
 import React, { useState  } from "react";
-import { Box, Checkbox, InputAdornment, Paper, Stack, TextField } from "@mui/material";
+import { Box, Checkbox, Paper, Stack, TextField } from "@mui/material";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 function CreateBill() {
   const navigate = useNavigate()
@@ -51,10 +52,7 @@ function CreateBill() {
       window.alert(error.status)
     })
   }
-  /**
-    @todo: Create theme file or style section to style components
-          - Remove InputProps warning
-  **/
+
   return (
     <Box padding={1}>
       <DefaultAppBar
@@ -73,42 +71,30 @@ function CreateBill() {
             <SaveAsIcon />
           </IconButton>} 
       />
-      <Paper sx={{padding: 1}}>
-      <Stack spacing={1} direction="column" justifyContent="center">
-        <TextField inputProps={{ style: { color: "#073857" }}} label="Description" variant="outlined" defaultValue={description} onChange={onDescriptionChanged} />
-        <TextField inputProps={{ style: { color: "#073857" }}} label="Value" variant="outlined" defaultValue={value} onChange={onValueChanged} type="number" 
-          InputProps={{
-             min: 0,
-             startAdornment: <InputAdornment position="start">$</InputAdornment>
-          }}
-          onKeyPress={(event) => {
-            if (event?.key === '-' || event?.key === '+') {
-              event.preventDefault();
-            }
-          }}/>
-        <TextField inputProps={{ style: { color: "#073857" }}} label="Group" variant="outlined" defaultValue={group} onChange={onGroupChanged} />
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DateTimePicker
-            label="Due Date"
-            defaultValue={dueDate}
-            {...dueDate ? {value: dueDate} : null }
-            onChange={onDueDateChanged}
-            renderInput={(params) => (
-              <TextField
-                  {...params}
-                  sx={{
-                    svg: { color: '#073857' },
-                    input: { color: '#073857' },
-                  }}
-               />
-           )}
-          />
-        </LocalizationProvider>
-        <Stack spacing={1} direction="row">
-          <TextField inputProps={{ style: { color: "#073857" }}} label="Obs" variant="outlined" defaultValue={obs} onChange={onObsChanged} sx={{ flex:8 }} />
-          <FormControlLabel inputProps={{ style: { color: "#073857" }}} control={isFixed ? <Checkbox defaultChecked /> : <Checkbox />} onChange={onIsFixedChanged} label="Is Fixed"  sx={{ flex:2 }} />
+      <Paper elevation={2}>
+        <Stack spacing={1} direction="column" justifyContent="center">
+          <TextField label="Description" variant="outlined" defaultValue={description} onChange={onDescriptionChanged} />
+          <TextField label="Value" variant="outlined" defaultValue={value} onChange={onValueChanged} type="number"/>
+          <TextField label="Group" variant="outlined" defaultValue={group} onChange={onGroupChanged} />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              label="Due Date"
+              defaultValue={dueDate}
+              {...dueDate ? {value: dueDate} : null }
+              onChange={onDueDateChanged}
+              components={{
+                OpenPickerIcon: () => ( <CalendarMonthIcon color="primary" />),
+              }}
+              renderInput={(params) => (
+                <TextField {...params} />
+            )}
+            />
+          </LocalizationProvider>
+          <Stack spacing={1} direction="row">
+            <TextField label="Obs" variant="outlined" defaultValue={obs} onChange={onObsChanged} sx={{ flex:8 }} />
+            <FormControlLabel control={isFixed ? <Checkbox defaultChecked /> : <Checkbox />} onChange={onIsFixedChanged} label="Is Fixed" sx={{ flex:2 }} />
+          </Stack>
         </Stack>
-      </Stack>
       </Paper>
     </Box>
   )
