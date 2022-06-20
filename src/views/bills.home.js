@@ -125,7 +125,7 @@ function Home() {
             </TableHead>
             <TableBody>
               {bills.map((bill) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={bill.id}>
+                <TableRow hover tabIndex={-1} key={bill.id}>
                   <TableCell onClick={ () => onSelectCell(bill) }> {bill.id} </TableCell>
                   <TableCell onClick={ () => onSelectCell(bill) }> {bill.description ? bill.description : "-"} </TableCell>
                   <TableCell onClick={ () => onSelectCell(bill) }>{bill.group ? bill.group : "-"}</TableCell>
